@@ -1,0 +1,16 @@
+{
+  "name": "mongo_node",
+  "version": "1.0.0",
+  "description": "mongodb tutorial",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "mongo"
+  ],
+  "author": "Benjamin Grove",
+  "license": "MIT"
+}
