@@ -46,7 +46,6 @@ var findRestaurants = function(db, callback) {
 };
 
 // Call the findRestaurants function:
-
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   findRestaurants(db, function() {
@@ -56,7 +55,6 @@ MongoClient.connect(url, function(err, db) {
 
 // Query by a field in an Embedded Document:
 // The following operation specifies an equality condition on the zipcode field in the address embedded document:
-
 var findRestaurants = function(db, callback) {
   var cursor = db.collection('restaurants').find( { "address.zipcode": "10075" } );
   cursor.each(function(err, doc) {
@@ -74,5 +72,27 @@ MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   findRestaurants(db, function() {
     db.close();
+  });
+});
+
+
+// Query by a Field in an Array
+// The following queries for documents whose grades array contains an embedded document with a field grade equal to "B".
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find( { "grades.grade": "B" } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close()
   });
 });
