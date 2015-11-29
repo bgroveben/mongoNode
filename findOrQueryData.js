@@ -27,3 +27,52 @@ MongoClient.connect(url, function(err, db) {
   });
 });
 // The result set contains all documents in the restaurants collection (all 25,000+ entries, mind you).
+
+
+// Query by a top Level Field
+// The following operation finds documents whose borough field equals "Manhattan":
+
+// Define a findRestaurants function:
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find( { "borough": "Manhattan" } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+// Call the findRestaurants function:
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
+
+// Query by a field in an Embedded Document:
+// The following operation specifies an equality condition on the zipcode field in the address embedded document:
+
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find( { "address.zipcode": "10075" } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+// Call the findRestaurants function:
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
