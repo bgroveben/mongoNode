@@ -96,3 +96,47 @@ MongoClient.connect(url, function(err, db) {
     db.close()
   });
 });
+
+
+// Greater Than Operator ($gt)
+// Query for documents whose grades array contains an embedded document with a field score greater than 30:
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find( { "grades.score": { $gt: 30 } } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
+
+
+// Less Than Operator($lt)
+// Query for documents whose grades array contains an embedded document with a field score less than 10:
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find( { "grades.score": { $lt: 10 } } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
