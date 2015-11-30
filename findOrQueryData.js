@@ -140,3 +140,43 @@ MongoClient.connect(url, function(err, db) {
     db.close();
   });
 });
+
+
+// Combine conditions in logical conjunctions (AND) and logical disjunctions(OR)
+// Logical AND -- you can specify a logical conjunction for a list of query conditions by separating the conditions with a comma in the conditions document:
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find(
+    { "cuisine": "Italian", "address.zipcode": "10075" }
+  );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
+
+
+// Logical OR -- you can specify a logical disjunction (OR) for a list of query conditions by using the $or query operator:
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find(
+    { $or: [ { "cuisine": "Italian" }, {"address.zipcode": "10075" } ] }
+  );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
