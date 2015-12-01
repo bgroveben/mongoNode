@@ -180,3 +180,34 @@ var findRestaurants = function(db, callback) {
     }
   });
 };
+
+
+// Sort Query Results
+/*
+To specify an order for the result set, append the sort() method to the query.
+Pass to the sort() method a document which contains the field(s) to sort by and the corresponding
+sort type, e.g. 1 for ascending and -1 for descending.
+*/
+/*
+Define a findRestaurants function to retreive all documents in the restaurants collection,
+sorted first by the borough field in ascending order, and then, within each borough,
+by the "address.zipcode" field in ascendding order.
+*/
+var findRestaurants = function(db, callback) {
+  var cursor = db.collection('restaurants').find().sort( { "borough": 1, "address.zipcode": 1 } );
+  cursor.each(function(err, doc) {
+    assert.equal(err, null);
+    if (doc != null) {
+      console.dir(doc);
+    } else {
+      callback();
+    }
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  findRestaurants(db, function() {
+    db.close();
+  });
+});
