@@ -71,3 +71,31 @@ MongoClient.connect(url, function(err, db) {
     db.close();
   });
 });
+
+
+// Drop a collection
+/*
+The remove all operation only removes the documents from the collection.
+The collection itself, as well as any indexes (indices?) for the collection, remain.
+To remove all documents from a collection, it may be more efficient to drop the entire collection, including
+the indexes, and then recreate the collection and rebuild the indexes.
+*/
+// Use the drop method to drop a collection, including any indexes:
+var dropRestaurants = function(db, callback) {
+  db.collection('restaurants').drop( function(err, response) {
+    console.log(response)
+    callback();
+  });
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  dropRestaurants(db, function() {
+    db.close();
+  });
+});
+
+/*
+Upon successful drop of the collection, the operation prints to the console true.
+If the collection to drop does not exist, the operation prints to the console false.
+*/
