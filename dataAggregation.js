@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/test';
 
 
-// Group documents by a Field and Calculate Count
+// Group Documents by a Field and Calculate Count
 /*
 Use the $group stage to group by a specified key.
 In the $group stage, specify the group by key in the _id field.
@@ -37,6 +37,37 @@ var aggregateRestaurants = function(db, callback) {
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   aggregateRestaurants(db, function() {
+    db.close();
+  });
+});
+
+
+// Filter and Group Documents
+/*
+Use the $match stage to filter documents.
+$match uses the MongoDB query syntax.
+The following pipeline uses $match to query the restaurants collection for documents with borough
+equal to Queens and cuisine equal to Brazilian.
+Then the $group stage groups the matching documents by the address.zipcode field and uses the $sum accumulator
+to calculate the count.
+$group accesses fields by the field path, which is the field name prefixed by the dollar sign $.
+*/
+var aggregateRestaurants = function(db, callback) {
+   db.collection('restaurants').aggregate(
+     [
+       { $match: { "borough": "Queens", "cuisine": "Brazilian" } },
+       { $group: { "_id": "$address.zipcode" , "count": { $sum: 1 } } }
+     ]).toArray(function(err, result) {
+       assert.equal(err, null);
+       console.log(result);
+       callback(result);
+     }
+   );
+};
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  aggregateRestaurants(db, function(){
     db.close();
   });
 });
